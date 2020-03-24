@@ -1,0 +1,52 @@
+[INPUT]
+col:0...9
+row:0...9
+
+[OUTPUT]
+left
+right
+up
+down
+
+
+[ENV_INIT]
+col = 0
+row = 4
+
+[SrowS_INIT]
+! left
+! right
+! up
+! down
+
+[SrowS_TRANS]
+#! left' | ! right' | ! up' | ! down'
+! left' | (! right' & ! up' & ! down')
+! right' | (! left' & ! up' & ! down')
+! up' | (! right' & ! left' & ! down')
+! down' | (! right' & ! left' & ! up')
+col=0 -> !left
+row=0 -> !up
+col=9 -> !right
+row=9 -> !down
+
+[ENV_TRANS]
+# Update robot position according to requirements
+col>0 & left -> col'+1=col
+col<4 & right -> col'=col+1
+row>0 & up -> row'+1=row
+row<9 & down -> row'=row+1
+(!left & !right) -> col'=col
+(!up & !down) -> row'=row
+
+
+[SrowS_TRANS]
+# No crash of robot with obstacle
+#col<1 | (col>3 & col<6) | col>6 | row!=5
+#row<4 | row>8 | col!=6
+col!= 1 | row!=3
+clo!= 1 
+
+[SrowS_LIVENESS]
+col'=0 & row'=0
+col'=9 & row'=9

@@ -1,0 +1,55 @@
+[INPUT]
+x:0...4
+y:0...4
+
+[OUTPUT]
+left
+right
+up
+down
+
+
+[ENV_INIT]
+x = 4
+y = 0
+
+[SYS_INIT]
+! left
+! right
+! up
+! down
+
+[SYS_TRANS]
+! left' | (! right' & ! up' & ! down')
+! right' | (! left' & ! up' & ! down')
+! up' | (! right' & ! left' & ! down')
+! down' | (! right' & ! left' & ! up')
+
+x=0 -> !left
+y=0 -> !up
+x=4 -> !right
+y=4 -> !down
+
+[ENV_TRANS]
+# Update robot position according to requirements
+x>0 & left -> x'+1=x
+x<4 & right -> x'=x+1
+y>0 & up -> y'+1=y
+y<4 & down -> y'=y+1
+(!left & !right) -> x'=x
+(!up & !down) -> y'=y
+
+
+
+[SYS_TRANS]
+# No crash of robot with obstacle
+x!= 1 | y!=3
+#(x=1 & y=2) -> !down
+#(x=1 & y=4) -> !up
+#(x=0 & y=3) -> !right
+#(x=2 & y=3) -> !left
+
+
+
+[SYS_LIVENESS]
+

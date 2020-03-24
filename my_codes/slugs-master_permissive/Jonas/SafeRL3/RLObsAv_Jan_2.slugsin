@@ -1,0 +1,74 @@
+[INPUT]
+col@0.0.4
+col@1
+col@2
+row@0.0.4
+row@1
+row@2
+
+
+[OUTPUT]
+left
+right
+up
+down
+
+
+
+[ENV_TRANS]
+# Update robot position according to requirements
+| ! & $ 1 | col@2 | col@1 | col@0.0.4 0 left $ 7 ^ 1 col@0.0.4' & 1 col@0.0.4' ^ col@1' ? 1 & col@1' ? 1 ^ col@2' ? 3 & col@2' ? 3 & ! ? 5 & ! ^ ? 4 col@2 & ! ^ ? 2 col@1 & ! ^ ? 0 col@0.0.4 1
+| ! & $ 1 | & ! col@2 1 & | 1 ! col@2 | & ! col@1 0 & | 0 ! col@1 | & ! col@0.0.4 0 & | 0 ! col@0.0.4 0 right $ 7 ^ 1 col@0.0.4 & 1 col@0.0.4 ^ col@1 ? 1 & col@1 ? 1 ^ col@2 ? 3 & col@2 ? 3 & ! ? 5 & ! ^ col@2' ? 4 & ! ^ col@1' ? 2 & ! ^ col@0.0.4' ? 0 1
+| ! & $ 1 | row@2 | row@1 | row@0.0.4 0 up $ 7 ^ 1 row@0.0.4' & 1 row@0.0.4' ^ row@1' ? 1 & row@1' ? 1 ^ row@2' ? 3 & row@2' ? 3 & ! ? 5 & ! ^ ? 4 row@2 & ! ^ ? 2 row@1 & ! ^ ? 0 row@0.0.4 1
+| ! & $ 1 | & ! row@2 1 & | 1 ! row@2 | & ! row@1 0 & | 0 ! row@1 | & ! row@0.0.4 0 & | 0 ! row@0.0.4 0 down $ 7 ^ 1 row@0.0.4 & 1 row@0.0.4 ^ row@1 ? 1 & row@1 ? 1 ^ row@2 ? 3 & row@2 ? 3 & ! ? 5 & ! ^ row@2' ? 4 & ! ^ row@1' ? 2 & ! ^ row@0.0.4' ? 0 1
+| ! & ! left ! right $ 1 & ! ^ col@2' col@2 & ! ^ col@1' col@1 & ! ^ col@0.0.4' col@0.0.4 1
+| ! & ! up ! down $ 1 & ! ^ row@2' row@2 & ! ^ row@1' row@1 & ! ^ row@0.0.4' row@0.0.4 1
+
+
+
+## Variable limits: 0<=col'<=4
+| ! col@2' & ! col@1' | ! col@0.0.4' 0
+## Variable limits: 0<=row'<=4
+| ! row@2' & ! row@1' | ! row@0.0.4' 0
+
+[ENV_INIT]
+$ 1 & ! col@2 & ! col@1 & ! col@0.0.4 1
+$ 1 & ! ^ row@2 1 & ! ^ row@1 0 & ! ^ row@0.0.4 0 1
+
+## Variable limits: 0<=col<=4
+| ! col@2 & ! col@1 | ! col@0.0.4 0
+## Variable limits: 0<=row<=4
+| ! row@2 & ! row@1 | ! row@0.0.4 0
+
+[SYS_TRANS]
+| ! left' & & ! right' ! up' ! down'
+| ! right' & & ! left' ! up' ! down'
+| ! up' & & ! right' ! left' ! down'
+| ! down' & & ! right' ! left' ! up'
+
+| ! $ 1 & ! col@2 & ! col@1 & ! col@0.0.4 1 ! left
+| ! $ 1 & ! row@2 & ! row@1 & ! row@0.0.4 1 ! up
+| ! $ 1 & ! ^ col@2 1 & ! ^ col@1 0 & ! ^ col@0.0.4 0 1 ! right
+| ! $ 1 & ! ^ row@2 1 & ! ^ row@1 0 & ! ^ row@0.0.4 0 1 ! down
+
+# No crash of robot with obstacle
+| $ 1 ! & ! col@2 & ! col@1 & ! ^ col@0.0.4 1 1 $ 1 ! & ! row@2 & ! row@1 & ! ^ row@0.0.4 1 1
+| $ 1 ! & ! col@2 & ! ^ col@1 1 & ! ^ col@0.0.4 0 1 $ 1 ! & ! row@2 & ! row@1 & ! ^ row@0.0.4 1 1
+| $ 1 ! & ! col@2 & ! ^ col@1 1 & ! ^ col@0.0.4 1 1 $ 1 ! & ! row@2 & ! row@1 & ! ^ row@0.0.4 1 1
+| $ 1 ! & ! col@2 & ! col@1 & ! ^ col@0.0.4 1 1 $ 1 ! & ! row@2 & ! ^ row@1 1 & ! ^ row@0.0.4 1 1
+| $ 1 ! & ! col@2 & ! ^ col@1 1 & ! ^ col@0.0.4 0 1 $ 1 ! & ! row@2 & ! ^ row@1 1 & ! ^ row@0.0.4 1 1
+| $ 1 ! & ! col@2 & ! ^ col@1 1 & ! ^ col@0.0.4 1 1 $ 1 ! & ! row@2 & ! ^ row@1 1 & ! ^ row@0.0.4 1 1
+
+
+
+
+[SYS_INIT]
+! left
+! right
+! up
+! down
+
+
+[SYS_LIVENESS]
+
+
